@@ -9,7 +9,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "price",
+						"name": "askId",
 						"type": "uint256"
 					}
 				],
@@ -28,6 +28,102 @@
 				],
 				"name": "cancelBid",
 				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchAllAsk",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address payable",
+								"name": "customer",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "enum OrderBook.State",
+								"name": "state",
+								"type": "uint8"
+							}
+						],
+						"internalType": "struct OrderBook.order[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchAllBid",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address payable",
+								"name": "customer",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "price",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							},
+							{
+								"internalType": "enum OrderBook.State",
+								"name": "state",
+								"type": "uint8"
+							}
+						],
+						"internalType": "struct OrderBook.order[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchYourAskIds",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchYourBidIds",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -86,11 +182,11 @@
 	},
 	"sources": {
 		"contracts/OrderBook.sol": {
-			"keccak256": "0xeab7d7e27e4d63325de827da92e845a859ac8e6ff905a151427042785c2218db",
+			"keccak256": "0x184504dd8d73682a8497a0795a1f2db0eeec4422e0cbb63169554fc9505ae15c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1e704e7325d9585057bedf256417ef31255a708a7489d10430f676566a5e61fa",
-				"dweb:/ipfs/QmZqXWZHrcC1jg3hCXqsTgkWruEuKZftvvPFdax1QhP32H"
+				"bzz-raw://f7b447c58a9e91b7b00554fd388ad134bde15e1517656bce1e725b3b793496e5",
+				"dweb:/ipfs/QmXxagqXm2ahTme93syLGNWLKrr8xmVutLMtDvo8NBUYdu"
 			]
 		}
 	},

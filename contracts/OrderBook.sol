@@ -23,15 +23,28 @@ pragma solidity ^0.8.0;
 
 contract OrderBook {
 
+    // if State is pending, can allow for cancellation
+    enum State { pending , completed }
 
     struct order {
         address payable customer;
         uint256 price;
-        uint256 timestamp;
+        uint256 timestamp; // since 
+        State state;
     }
 
     order[] bidBook;
     order[] askBook;
+    uint[] request;
+
+/*
+    Modifier Functions
+*/
+
+    modifier isPending(State state) {
+        require(state == State.pending, "Order Pending");
+        _;
+    }
 
 /*
     Helper Functons
@@ -45,6 +58,12 @@ contract OrderBook {
     function sortAsk() internal {
        ascendingQuickSort(bidBook, int(0), int(bidBook.length - 1));
        return;
+    }
+
+    function deleteArray() internal {
+        for (uint i = 0; i < request.length; i ++) {
+            delete request[i];
+        }
     }
 
     function descendingQuickSort(order[] memory arr, int left, int right) internal{
@@ -92,31 +111,52 @@ contract OrderBook {
 */
 
     function placeBid (uint256 price) public {
-        order memory newBid = order(payable(msg.sender),price,block.timestamp);
+        order memory newBid = order(payable(msg.sender),price,block.timestamp,State.pending);
         bidBook.push(newBid);
     }
 
-    function cancelBid (uint256 bidId) public {
-
+    // Takes in Bid Id
+    function cancelBid (uint256 bidId) public isPending(bidBook[bidId].state) {
+        delete bidBook[bidId];
+        sortBid();
     }
 
     function placeAsk (uint256 price) public {
-
+        order memory newBid = order(payable(msg.sender),price,block.timestamp,State.pending);
+        askBook.push(newBid);
     }
 
-    function cancelAsk (uint256 price) public {
-
+    function cancelAsk (uint256 askId) public isPending(askBook[askId].state) {
+        delete askBook[askId];
+        sortAsk();      
     }
 
-    // function fetchAllBid() public view returns (order[] memory) {
+    function fetchAllBid() public view returns (order[] memory) {
+        return bidBook;
+    }
 
-    // }
+    function fetchAllAsk() public view returns (order[] memory) {
+        return askBook;
+    }
 
-    // function fetchYourBid() public view returns (order[] memory) {
-    //     return bidSide[msg.sender]; 
-    // }
+    function fetchYourBidIds() public returns (uint[] memory) {
+        deleteArray();
+        for (uint i = 0; i < bidBook.length; i++) {
+            if (bidBook[i].customer == payable(msg.sender)) {
+                request.push(i);
+            }
+        }
+        return request;
+    }
 
-    // function fetchYourAsk() public view returns (order[] memory) {
-    //     return askSide[msg.sender];
-    // }
+    function fetchYourAskIds() public returns (uint[] memory) {
+        deleteArray();
+        for (uint i = 0; i < askBook.length; i++) {
+            if (askBook[i].customer == payable(msg.sender)) {
+                request.push(i);
+            }
+        }
+        return request;
+    }
+
 }
