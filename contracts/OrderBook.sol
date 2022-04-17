@@ -19,6 +19,12 @@ pragma solidity ^0.8.0;
     -   Users can place > 1 order , but this would mean each read call
         would be O(n). For simplicity sake, this function will not be
         optimised.
+    -   Since tasks stated only ask for post and cancel orders, and not 
+        complete orders, State.completed is not utilised.
+    -   Since this is an on-chain decentralised exchange, I thought that
+        having a commissionPercentage would be a nice touch.
+    -   Locking collateral by sending ether to the contract.
+
 */
 
 contract OrderBook {
@@ -26,10 +32,17 @@ contract OrderBook {
     // if State is pending, can allow for cancellation
     enum State { pending , completed }
 
+    address payable _owner = payable(msg.sender);
+    uint256 commission; // Going the extra mile - commmission 0%-100%
+
+    constructor (uint256 _commission) {
+        commission = _commission;
+    }
+
     struct order {
         address payable customer;
-        uint256 price;
-        uint256 timestamp; // since 
+        uint256 value; // msg.value less commission
+        uint256 timestamp; // for ordered list
         State state;
     }
 
@@ -37,14 +50,25 @@ contract OrderBook {
     order[] askBook;
     uint[] request;
 
+    event bidPlaced(address,uint256,uint256,State);
+    event askPlaced(address,uint256,uint256,State);
+    event bidCancelled(uint);
+    event askCancelled(uint);
+
 /*
     Modifier Functions
 */
 
-    modifier isPending(State state) {
-        require(state == State.pending, "Order Pending");
+    modifier isPending(order memory _order) {
+        require(_order.state == State.pending, "Order Pending");
         _;
     }
+
+    modifier isAuthorised(order memory _order, address sender) {
+        require(_order.customer == payable(sender), "Not Authorised");
+        _;
+    }
+
 
 /*
     Helper Functons
@@ -70,10 +94,10 @@ contract OrderBook {
         int i = left;
         int j = right;
         if(i==j) return;
-        uint256 pivot = arr[uint(left + (right - left) / 2)].timestamp;
+        uint256 pivot = arr[uint(left + (right - left) / 2)].value;
         while (i <= j) {
-            while (arr[uint(i)].timestamp < pivot) i++;
-            while (pivot < arr[uint(j)].timestamp) j--;
+            while (arr[uint(i)].value < pivot) i++;
+            while (pivot < arr[uint(j)].value) j--;
             if (i <= j) {
                 (arr[uint(i)], arr[uint(j)]) = (arr[uint(j)], arr[uint(i)]);
                 i++;
@@ -90,10 +114,10 @@ contract OrderBook {
         int i = left;
         int j = right;
         if(i==j) return;
-        uint256 pivot = arr[uint(left + (right - left) / 2)].timestamp;
+        uint256 pivot = arr[uint(left + (right - left) / 2)].value;
         while (i <= j) {
-            while (arr[uint(i)].timestamp > pivot) i++;
-            while (pivot > arr[uint(j)].timestamp) j--;
+            while (arr[uint(i)].value > pivot) i++;
+            while (pivot > arr[uint(j)].value) j--;
             if (i <= j) {
                 (arr[uint(i)], arr[uint(j)]) = (arr[uint(j)], arr[uint(i)]);
                 i++;
@@ -110,26 +134,45 @@ contract OrderBook {
     Callable Functions
 */
 
-    function placeBid (uint256 price) public {
-        order memory newBid = order(payable(msg.sender),price,block.timestamp,State.pending);
+    function placeBid (uint256 price) public payable {
+        require(price >= 0, "price value must be more than 0");
+        require(msg.value >= price, "Not enough blance to place bid");
+        uint256 time = block.timestamp;
+        uint256 commissionedPrice = msg.value * (100-commission) / 100;
+        order memory newBid = order(payable(msg.sender),commissionedPrice,time,State.pending);
         bidBook.push(newBid);
+        _owner.transfer(commissionedPrice);
+        emit bidPlaced(msg.sender,commissionedPrice,time,State.pending);
     }
 
-    // Takes in Bid Id
-    function cancelBid (uint256 bidId) public isPending(bidBook[bidId].state) {
+    function cancelBid (uint bidId) public isPending(bidBook[bidId]) isAuthorised(bidBook[bidId], msg.sender) {
+        bidBook[bidId].customer.transfer(bidBook[bidId].value);
         delete bidBook[bidId];
         sortBid();
+        emit bidCancelled(bidId);
     }
 
-    function placeAsk (uint256 price) public {
-        order memory newBid = order(payable(msg.sender),price,block.timestamp,State.pending);
+    function placeAsk (uint256 price) public payable {
+        require(price >= 0, "price value must be more than 0");
+        require(msg.value >= price, "Not enough blance to place ask");
+        uint256 time = block.timestamp;
+        uint256 commissionedPrice = msg.value * (100-commission) / 100;
+        order memory newBid = order(payable(msg.sender),commissionedPrice,time,State.pending);
         askBook.push(newBid);
+        _owner.transfer(commissionedPrice);
+        emit askPlaced(msg.sender,commissionedPrice,time,State.pending);
     }
 
-    function cancelAsk (uint256 askId) public isPending(askBook[askId].state) {
+    function cancelAsk (uint askId) public isPending(askBook[askId]) isAuthorised(askBook[askId], msg.sender) {
+        askBook[askId].customer.transfer(askBook[askId].value);
         delete askBook[askId];
         sortAsk();      
+        emit askCancelled(askId);
     }
+
+/*
+    Getter Functions
+*/
 
     function fetchAllBid() public view returns (order[] memory) {
         return bidBook;
@@ -157,6 +200,30 @@ contract OrderBook {
             }
         }
         return request;
+    }
+
+    function getBidAddress (uint id) public view returns(address payable) {
+        return bidBook[id].customer;
+    }
+
+    function getAskAddress (uint id) public view returns(address payable) {
+        return askBook[id].customer;
+    }
+
+    function getBidValue (uint id) public view returns(uint256) {
+        return bidBook[id].value;
+    }
+
+    function getAskValue (uint id) public view returns(uint256) {
+        return askBook[id].value;
+    }
+
+    function getBidState (uint id) public view returns(State) {
+        return bidBook[id].state;
+    }
+
+    function getAskState (uint id) public view returns(State) {
+        return askBook[id].state;
     }
 
 }
