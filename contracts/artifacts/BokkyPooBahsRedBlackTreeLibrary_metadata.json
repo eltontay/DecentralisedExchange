@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.6.12+commit.27d51765"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/BokkyPooBahsRedBlackTreeLibrary.sol": "BokkyPooBahsRedBlackTreeLibrary"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/BokkyPooBahsRedBlackTreeLibrary.sol": {
+			"keccak256": "0xf65add22cd39514bad757f47fdbcea0d6ee90de4ea2fe7958b6c40b368f184d1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4ebed32e6cfe8731849671cbc6f9bfd619798f8fdb9d22f02f892f0d5e0d530f",
+				"dweb:/ipfs/QmXDrFP8Y9KqCPNwX2GkEynfLH2cjf2YhPjBEamVsRXehM"
+			]
+		}
+	},
+	"version": 1
+}

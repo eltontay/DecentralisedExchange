@@ -24,9 +24,60 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
-				"name": "askCancelled",
+				"name": "askLink",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "bidLink",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "newHead",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "newTail",
 				"type": "event"
 			},
 			{
@@ -55,54 +106,86 @@
 						"internalType": "enum OrderBook.State",
 						"name": "",
 						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
-				"name": "askPlaced",
+				"name": "orderCreated",
 				"type": "event"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
+				"inputs": [],
+				"name": "askCount",
+				"outputs": [
 					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "bidCancelled",
-				"type": "event"
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
+				"inputs": [],
+				"name": "askHead",
+				"outputs": [
 					{
-						"indexed": false,
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "enum OrderBook.State",
-						"name": "",
-						"type": "uint8"
 					}
 				],
-				"name": "bidPlaced",
-				"type": "event"
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "bidCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "bidHead",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -131,38 +214,27 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "fetchAllAsk",
-				"outputs": [
+				"inputs": [
 					{
-						"components": [
-							{
-								"internalType": "address payable",
-								"name": "customer",
-								"type": "address"
-							},
-							{
-								"internalType": "uint256",
-								"name": "value",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "timestamp",
-								"type": "uint256"
-							},
-							{
-								"internalType": "enum OrderBook.State",
-								"name": "state",
-								"type": "uint8"
-							}
-						],
-						"internalType": "struct OrderBook.order[]",
-						"name": "",
-						"type": "tuple[]"
+						"internalType": "string",
+						"name": "a",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "b",
+						"type": "string"
 					}
 				],
-				"stateMutability": "view",
+				"name": "concatenate",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -190,11 +262,39 @@
 								"internalType": "enum OrderBook.State",
 								"name": "state",
 								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "next",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "prev",
+								"type": "uint256"
 							}
 						],
 						"internalType": "struct OrderBook.order[]",
 						"name": "",
 						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fetchAsk",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -344,6 +444,60 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "getOrder",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum OrderBook.State",
+						"name": "",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "price",
 						"type": "uint256"
 					}
@@ -395,11 +549,19 @@
 	},
 	"sources": {
 		"contracts/OrderBook.sol": {
-			"keccak256": "0x955de550fcf45b5fca8d3cdd1cec39c87622ff5c5986a92058e973d7a15aed4f",
+			"keccak256": "0x66be1b559e5916eb3bdcaf7826ba3cba9238f2ff0184e71975e52883a5514284",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ff40f261f6185b5af02b633d5e2fd99f5c663a5030c77341e47bc2d7d50f76a0",
-				"dweb:/ipfs/QmbhCQmNsbBndvVTrBrwZLS4XaDF39PNEUkkG8cGcWVyYP"
+				"bzz-raw://8456a879860a98f5f408174adfb167554903b920ed6b01a3f7a2d117aa077656",
+				"dweb:/ipfs/Qma3bmiEjQQ3hD4xM3v7wCJVNuUf4aAn19eM4kTJ8YmGxF"
+			]
+		},
+		"contracts/Strings.sol": {
+			"keccak256": "0x36af8f8be523e084c3ed6932ee5c0a7f038f663d8f1c185f77a810a43e3ae1cf",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://96fa73b388e04aafcebe0d82f8e5d3a072eddc91e09ee82be6dbeaad05370f6c",
+				"dweb:/ipfs/QmfEn7ttDhAHaApZHMb3XT7tA1M2SU5Rvqk3iKER7U2Pxf"
 			]
 		}
 	},

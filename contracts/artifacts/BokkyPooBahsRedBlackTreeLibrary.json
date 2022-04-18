@@ -1,0 +1,75 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "60566023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122038a23a12131cda2cb2e035a6073c17113c0209f5f8126130f5b672eae0fcba3364736f6c634300060c0033",
+			"opcodes": "PUSH1 0x56 PUSH1 0x23 PUSH1 0xB DUP3 DUP3 DUP3 CODECOPY DUP1 MLOAD PUSH1 0x0 BYTE PUSH1 0x73 EQ PUSH1 0x16 JUMPI INVALID JUMPDEST ADDRESS PUSH1 0x0 MSTORE PUSH1 0x73 DUP2 MSTORE8 DUP3 DUP2 RETURN INVALID PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 CODESIZE LOG2 GASPRICE SLT SGT SHR 0xDA 0x2C 0xB2 0xE0 CALLDATALOAD 0xA6 SMOD EXTCODECOPY OR GT EXTCODECOPY MUL MULMOD CREATE2 0xF8 SLT PUSH2 0x30F5 0xB6 PUSH19 0xEAE0FCBA3364736F6C634300060C0033000000 ",
+			"sourceMap": "669:11818:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;"
+		},
+		"deployedBytecode": {
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122038a23a12131cda2cb2e035a6073c17113c0209f5f8126130f5b672eae0fcba3364736f6c634300060c0033",
+			"opcodes": "PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 CODESIZE LOG2 GASPRICE SLT SGT SHR 0xDA 0x2C 0xB2 0xE0 CALLDATALOAD 0xA6 SMOD EXTCODECOPY OR GT EXTCODECOPY MUL MULMOD CREATE2 0xF8 SLT PUSH2 0x30F5 0xB6 PUSH19 0xEAE0FCBA3364736F6C634300060C0033000000 ",
+			"sourceMap": "669:11818:0:-:0;;;;;;;;"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "17200",
+				"executionCost": "97",
+				"totalCost": "17297"
+			},
+			"internal": {
+				"exists(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"first(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer)": "infinite",
+				"getEmpty()": "infinite",
+				"getNode(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"insert(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"insertFixup(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"isEmpty(uint256)": "infinite",
+				"last(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer)": "infinite",
+				"next(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"prev(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"remove(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"removeFixup(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"replaceParent(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256,uint256)": "infinite",
+				"rotateLeft(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"rotateRight(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"treeMaximum(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite",
+				"treeMinimum(struct BokkyPooBahsRedBlackTreeLibrary.Tree storage pointer,uint256)": "infinite"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": []
+}
