@@ -56,7 +56,7 @@ contract OrderBook {
     uint256 public askHead;
     uint256 public askCount; // include all ask orders including soft delete
  
-    event orderCreated(address,uint256,uint256,State,uint256,uint256,uint256,bool);   
+    event orderCreated(address,uint256,uint256,State,uint256,uint256,uint256);   
     event newHead(uint256);
     event newTail(uint256);
     event bidLink(uint256, uint256);
@@ -99,7 +99,7 @@ contract OrderBook {
             0
         );
         bidBook[bidCount] = newBid;
-        emit orderCreated(customer,value,timestamp,State.pending,bidCount,0,0,false);   
+        emit orderCreated(customer,value,timestamp,State.pending,bidCount,0,0);   
         return newBid;
     }
 
@@ -115,30 +115,40 @@ contract OrderBook {
             0
         );
         askBook[askCount] = newAsk;
-        emit orderCreated(customer,value,timestamp,State.pending,askCount,0,0,false);   
+        emit orderCreated(customer,value,timestamp,State.pending,askCount,0,0);   
         return newAsk;
     }
 
-    function setBidHead(uint256 id) internal {
-        bidHead = id;
-        emit newHead(id);
+    function deleteAsk(uint256 id) internal {
+        if (askHead == 0 || id == 0) {
+            return;
+        }
+        if (askHead == id) {
+            askHead = askBook[id].next;
+        }
+        if (askBook[id].next != 0) {
+            askBook[askBook[id].next].prev = askBook[id].prev;
+        }
+        if (askBook[id].prev != 0) {
+            askBook[askBook[id].prev].next = askBook[id].next;
+        }
+        return;
     }
 
-    function setAskHead(uint256 id) internal {
-        askHead = id;
-        emit newHead(id);
-    }
-
-    function linkBid(uint256 prevId, uint256 nextId) internal {
-        bidBook[prevId].next = nextId;
-        bidBook[nextId].prev = prevId;
-        emit bidLink(prevId,nextId);
-    }
-
-    function askBid(uint256 prevId, uint256 nextId) internal {
-        bidBook[prevId].next = nextId;
-        bidBook[nextId].prev = prevId;
-        emit askLink(prevId,nextId);
+    function deleteBid(uint256 id) internal {
+        if (bidHead == 0 || id == 0) {
+            return;
+        }
+        if (bidHead == id) {
+            bidHead = bidBook[id].next;
+        }
+        if (bidBook[id].next != 0) {
+            bidBook[bidBook[id].next].prev = bidBook[id].prev;
+        }
+        if (bidBook[id].prev != 0) {
+            bidBook[bidBook[id].prev].next = bidBook[id].next;
+        }
+        return;
     }
 
     // insertion sort
@@ -164,11 +174,43 @@ contract OrderBook {
         }
     }
 
+    // insertion sort
+    function sortBid(order memory newOrder) internal {
+        uint256 current;
+        if (bidHead == 0) {
+            bidHead = newOrder.id;
+        } else if (bidBook[bidHead].value <= newOrder.value) {
+            bidBook[newOrder.id].next = bidHead;
+            bidBook[bidBook[newOrder.id].next].prev = newOrder.id;
+            bidHead = newOrder.id;
+        } else {
+            current = bidHead;
+            while (bidBook[current].next != 0 && bidBook[bidBook[current].next].value > newOrder.value) {
+                current = bidBook[current].next;
+            }
+            bidBook[newOrder.id].next = bidBook[current].next;
+            if (bidBook[current].next != 0) {
+                bidBook[bidBook[newOrder.id].next].prev = newOrder.id;
+            }
+            bidBook[current].next = newOrder.id;
+            bidBook[newOrder.id].prev = current;
+        }
+    }
+
     function insertionSortAsk() internal {
         uint256 current = askHead;
         while (current != 0) {
             uint256 next = askBook[current].next;
             sortAsk(askBook[current]);
+            current = next;
+        }
+    }
+
+    function insertionSortBid() internal {
+        uint256 current = bidHead;
+        while (current != 0) {
+            uint256 next = bidBook[current].next;
+            sortBid(bidBook[current]);
             current = next;
         }
     }
@@ -181,23 +223,21 @@ contract OrderBook {
     Callable Functions
 */
 
-
-
     function placeBid (uint256 price) public payable {
         require(price >= 0, "price value must be more than 0");
         require(msg.value >= price, "Not enough blance to place bid");
-        // uint256 time = block.timestamp;
-        // uint256 commissionedPrice = msg.value * (100-commission) / 100;
-        // // order memory newBid = order(payable(msg.sender),commissionedPrice,time,State.pending);
-        // // bidBook.push(newBid);
-        // _owner.transfer(commissionedPrice);
-        // emit bidPlaced(msg.sender,commissionedPrice,time,State.pending);
+        uint256 time = block.timestamp;
+        uint256 commissionedPrice = msg.value * (100-commission) / 100;
+        order memory newBid = createBid(msg.sender,commissionedPrice,time);
+        sortBid(newBid);
+        _owner.transfer(commissionedPrice);
     }
 
-    function cancelBid (uint256 bidId) public isPending(bidBook[bidId]) isAuthorised(bidBook[bidId], msg.sender) {
-        // bidBook[bidId].customer.transfer(bidBook[bidId].value);
-        // delete bidBook[bidId];
-        // // emit bidCancelled(bidId);
+    function cancelBid (uint256 bidId) public payable isPending(bidBook[bidId]) isAuthorised(bidBook[bidId], msg.sender) {
+        uint256 value = bidBook[bidId].value - msg.value;
+        deleteAsk(bidId);
+        address payable receiver = payable(msg.sender);
+        receiver.call{value : value};
     }
 
     function placeAsk (uint256 price) public payable {
@@ -207,13 +247,14 @@ contract OrderBook {
         uint256 commissionedPrice = msg.value * (100-commission) / 100;
         order memory newAsk = createAsk(msg.sender,commissionedPrice,time);
         sortAsk(newAsk);
+        _owner.transfer(commissionedPrice);
     }
 
-    function cancelAsk (uint256 askId) public isPending(askBook[askId]) isAuthorised(askBook[askId], msg.sender) {
-        // askBook[askId].customer.transfer(askBook[askId].value);
-        // delete askBook[askId];
-        // // sortAsk(askBook);      
-        // emit askCancelled(askId);
+    function cancelAsk (uint256 askId) public payable isPending(askBook[askId]) isAuthorised(askBook[askId], msg.sender) {
+        uint256 value = askBook[askId].value - msg.value;
+        deleteAsk(askId);
+        address payable receiver = payable(msg.sender);
+        receiver.call{value:value};
     }
 
 /*
@@ -232,27 +273,16 @@ contract OrderBook {
         return output;
     }
 
-    function fetchAllBid() public returns (order[] memory) {
-    }
-
-
-    function fetchYourBidIds() public returns (uint256[] memory) {
-    }
-
-    function fetchYourAskIds() public returns (uint256[] memory) {
-    }
-
-    function getOrder(uint256 id) public view returns(address payable,uint256,uint256,State,uint256,uint256,uint256,bool) {
-        // order memory currOrder = bidBook[id];
-        // return (currOrder.customer,currOrder.value,currOrder.timestamp,currOrder.state,currOrder.id,currOrder.next,currOrder.prev,currOrder.delb);
-    }
-
-    function getBidAddress (uint256 id) public view returns(address payable) {
-        return bidBook[id].customer;
-    }
-
-    function getAskAddress (uint256 id) public view returns(address payable) {
-        return askBook[id].customer;
+    function fetchBid() public view returns (string memory) {
+        uint256 current = bidHead;
+        string memory output = "";
+        while (current != 0) {
+            uint256 next = bidBook[current].next;
+            string memory currString = Strings.toString(current);
+            output = concatenate(output,currString);
+            current = next;
+        }
+        return output;
     }
 
     function getBidValue (uint256 id) public view returns(uint256) {
@@ -271,12 +301,20 @@ contract OrderBook {
         return askBook[id].state;
     }
 
+    function getBidNext (uint256 id) public view returns(uint256) {
+        return bidBook[id].next;
+    }
+
     function getAskNext (uint256 id) public view returns(uint256) {
         return askBook[id].next;
+    }
+
+    function getBidPrev (uint256 id) public view returns(uint256) {
+        return bidBook[id].prev;
     }
 
     function getAskPrev (uint256 id) public view returns(uint256) {
         return askBook[id].prev;
     }
-
+    
 }
