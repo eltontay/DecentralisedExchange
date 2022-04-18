@@ -129,6 +129,7 @@ contract OrderBook {
         if (askBook[id].prev != 0) {
             askBook[askBook[id].prev].next = askBook[id].next;
         }
+        askCount--;
         return;
     }
 
@@ -145,6 +146,7 @@ contract OrderBook {
         if (bidBook[id].prev != 0) {
             bidBook[bidBook[id].prev].next = bidBook[id].next;
         }
+        bidCount--;
         return;
     }
 
