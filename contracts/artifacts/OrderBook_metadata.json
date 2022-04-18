@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.13+commit.abaa5c0e"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -353,6 +353,44 @@
 						"type": "uint256"
 					}
 				],
+				"name": "getAskNext",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "getAskPrev",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
 				"name": "getAskState",
 				"outputs": [
 					{
@@ -549,11 +587,11 @@
 	},
 	"sources": {
 		"contracts/OrderBook.sol": {
-			"keccak256": "0x84a7cfaa5923eb37892b00ffecd7c9cc31d57ab49f75081c03e10389a6bf0cd0",
+			"keccak256": "0xaff97b8cab5828b184e02f57e5e778dfe38fe1434ea78843ede82f874b039a63",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://26e091fd4b5e8025381ad566603344c5b9a7770cc17ea92222350e9a5334f963",
-				"dweb:/ipfs/QmTyP1QBzEbY6GEtSq8SkBZuN1xdvmu7EBZzJnykFPMckn"
+				"bzz-raw://da7dd5230f914240f84af4a0839b506d55e172418c42e3000fae4f77d36e910e",
+				"dweb:/ipfs/QmUutXEZ6nV9TUb93ycLDftobBfCaPFdqMLdPJRAeX4Lbv"
 			]
 		},
 		"contracts/Strings.sol": {

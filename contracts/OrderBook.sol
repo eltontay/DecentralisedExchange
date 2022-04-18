@@ -146,23 +146,21 @@ contract OrderBook {
         uint256 current;
         if (askHead == 0) {
             askHead = newOrder.id;
-        }
-        else if (askBook[askHead].value >= newOrder.value) {
-            newOrder.next = askHead;
-            askBook[newOrder.next].prev = newOrder.id;
+        } else if (askBook[askHead].value >= newOrder.value) {
+            askBook[newOrder.id].next = askHead;
+            askBook[askBook[newOrder.id].next].prev = newOrder.id;
             askHead = newOrder.id;
-        }
-        else {
+        } else {
             current = askHead;
             while (askBook[current].next != 0 && askBook[askBook[current].next].value < newOrder.value) {
                 current = askBook[current].next;
             }
-            newOrder.next = askBook[current].next;
+            askBook[newOrder.id].next = askBook[current].next;
             if (askBook[current].next != 0) {
-                askBook[newOrder.next].prev = newOrder.id;
+                askBook[askBook[newOrder.id].next].prev = newOrder.id;
             }
             askBook[current].next = newOrder.id;
-            newOrder.prev = current;
+            askBook[newOrder.id].prev = current;
         }
     }
 
@@ -170,7 +168,6 @@ contract OrderBook {
         uint256 current = askHead;
         while (current != 0) {
             uint256 next = askBook[current].next;
-            askBook[current].prev = askBook[current].next = 0;
             sortAsk(askBook[current]);
             current = next;
         }
@@ -272,6 +269,14 @@ contract OrderBook {
 
     function getAskState (uint256 id) public view returns(State) {
         return askBook[id].state;
+    }
+
+    function getAskNext (uint256 id) public view returns(uint256) {
+        return askBook[id].next;
+    }
+
+    function getAskPrev (uint256 id) public view returns(uint256) {
+        return askBook[id].prev;
     }
 
 }
