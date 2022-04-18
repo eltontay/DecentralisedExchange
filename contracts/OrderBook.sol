@@ -208,7 +208,7 @@ contract OrderBook {
         require(msg.value >= price, "Not enough blance to place ask");
         uint256 time = block.timestamp;
         uint256 commissionedPrice = msg.value * (100-commission) / 100;
-        order memory newAsk = createAsk(msg.sender,time,commissionedPrice);
+        order memory newAsk = createAsk(msg.sender,commissionedPrice,time);
         sortAsk(newAsk);
     }
 
