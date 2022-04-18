@@ -16,9 +16,6 @@ pragma solidity ^0.8.0;
         - ask (top ask is the lowest , ascending)
 
     Assumptions
-    -   Users can place > 1 order , but this would mean each read call
-        would be O(n). For simplicity sake, this function will not be
-        optimised.
     -   Since tasks stated only ask for post and cancel orders, and not 
         complete orders, State.completed is not utilised.
     -   Since this is an on-chain decentralised exchange, I thought that
@@ -316,5 +313,5 @@ contract OrderBook {
     function getAskPrev (uint256 id) public view returns(uint256) {
         return askBook[id].prev;
     }
-    
+
 }
