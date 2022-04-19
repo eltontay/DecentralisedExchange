@@ -21,9 +21,9 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "uint256",
+						"internalType": "address",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					},
 					{
 						"indexed": false,
@@ -32,52 +32,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "askLink",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "bidLink",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "newHead",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "newTail",
+				"name": "askCancelled",
 				"type": "event"
 			},
 			{
@@ -94,30 +49,19 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					},
+					}
+				],
+				"name": "askPlaced",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "uint256",
+						"internalType": "address",
 						"name": "",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "enum OrderBook.State",
-						"name": "",
-						"type": "uint8"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
+						"type": "address"
 					},
 					{
 						"indexed": false,
@@ -126,7 +70,26 @@
 						"type": "uint256"
 					}
 				],
-				"name": "orderCreated",
+				"name": "bidCancelled",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "bidPlaced",
 				"type": "event"
 			},
 			{
@@ -464,11 +427,11 @@
 	},
 	"sources": {
 		"contracts/OrderBook.sol": {
-			"keccak256": "0xce2f969d93aad559641376ed28b88d8101358365d037d6a22f4335949896a015",
+			"keccak256": "0x7e57c95ca9b61038e98ae3f2242ffbbbdb3a58da23e28cbeba337ea6e6b6f782",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://766927acd10dfd1f606acb14c92918f957676dc3a305a9ed88e0f008ab85eff3",
-				"dweb:/ipfs/QmcXjntKYf6AP4pu9jjpu2CDwMryjs2jGkxUoVWZzFB4U7"
+				"bzz-raw://624db1f7a460b3f3a0dac154daff79fcda24a6eda0bbac9575cc050294b69e66",
+				"dweb:/ipfs/Qmb7y9URjNcod7C5NxuGv33L3mH8iVUtz1obnihy2y76MR"
 			]
 		},
 		"contracts/Strings.sol": {

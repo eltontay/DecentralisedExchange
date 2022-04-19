@@ -98,10 +98,36 @@ contract('TestOrderBook', function (accounts) {
 
   it('Check Ask Order', async () => {
     let askOrder = await orderBook.fetchAsk({
-      from: person1,
+      from: person2,
     });
 
     let correctOrder = ' 1 3 2';
+    assert.equal(askOrder, correctOrder);
+  });
+
+  it('Cancel Bid #3 ', async () => {
+    await orderBook.cancelBid(3, {
+      from: person1,
+    });
+
+    let bidOrder = await orderBook.fetchBid({
+      from: person1,
+    });
+    let correctOrder = ' 2 1';
+
+    assert.equal(bidOrder, correctOrder);
+  });
+
+  it('Cancel Ask #3 ', async () => {
+    await orderBook.cancelAsk(3, {
+      from: person2,
+    });
+
+    let askOrder = await orderBook.fetchAsk({
+      from: person2,
+    });
+    let correctOrder = ' 1 2';
+
     assert.equal(askOrder, correctOrder);
   });
 });

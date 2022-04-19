@@ -7,7 +7,7 @@
 - Allows users to post orders to either side of the book. the contract should lock required collateral
 - Allows users to cancel their orders
 
-## Truffle Test Cases in /test
+## Truffle Test Cases , using Ganache , in /test
 
 ```bash
 truffle compile

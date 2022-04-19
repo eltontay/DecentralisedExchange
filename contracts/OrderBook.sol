@@ -126,7 +126,7 @@ contract OrderBook {
         if (askBook[id].prev != 0) {
             askBook[askBook[id].prev].next = askBook[id].next;
         }
-        askCount--;
+        askCount -= 1;
         return;
     }
 
@@ -135,15 +135,15 @@ contract OrderBook {
             return;
         }
         if (bidHead == id) {
-            bidHead = bidBook[id].next;
-        }
-        if (bidBook[id].next != 0) {
-            bidBook[bidBook[id].next].prev = bidBook[id].prev;
+            bidHead = bidBook[id].prev;
         }
         if (bidBook[id].prev != 0) {
             bidBook[bidBook[id].prev].next = bidBook[id].next;
         }
-        bidCount--;
+        if (bidBook[id].next != 0) {
+            bidBook[bidBook[id].next].prev = bidBook[id].prev;
+        }
+        bidCount -= 1;
         return;
     }
 
@@ -232,7 +232,7 @@ contract OrderBook {
 
     function cancelBid (uint256 bidId) public payable isPending(bidBook[bidId]) isAuthorised(bidBook[bidId], msg.sender) {
         uint256 value = bidBook[bidId].value - msg.value;
-        deleteAsk(bidId);
+        deleteBid(bidId);
         address payable receiver = payable(msg.sender);
         receiver.call{value : value};
         emit bidCancelled(msg.sender, bidId);
