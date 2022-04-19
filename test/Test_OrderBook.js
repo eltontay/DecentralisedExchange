@@ -20,7 +20,7 @@ contract('TestOrderBook', function (accounts) {
     let valueWei = value * 1000000000000000000;
     let amount = valueWei * 0.95;
 
-    let bidPlaced = await orderBook.placeBid(1, {
+    await orderBook.placeBid(1, {
       from: person1,
       value: valueWei,
     });
@@ -32,7 +32,7 @@ contract('TestOrderBook', function (accounts) {
     let valueWei = value * 1000000000000000000;
     let amount = valueWei * 0.95;
 
-    let bidPlaced = await orderBook.placeBid(5, {
+    await orderBook.placeBid(5, {
       from: person1,
       value: valueWei,
     });
@@ -44,7 +44,7 @@ contract('TestOrderBook', function (accounts) {
     let valueWei = value * 1000000000000000000;
     let amount = valueWei * 0.95;
 
-    let bidPlaced = await orderBook.placeBid(4, {
+    await orderBook.placeBid(4, {
       from: person1,
       value: valueWei,
     });
@@ -58,5 +58,50 @@ contract('TestOrderBook', function (accounts) {
 
     let correctOrder = ' 2 3 1';
     assert.equal(bidOrder, correctOrder);
+  });
+
+  it('Place First Ask - 1 ETH', async () => {
+    let value = 1;
+    let valueWei = value * 1000000000000000000;
+    let amount = valueWei * 0.95;
+
+    await orderBook.placeAsk(1, {
+      from: person2,
+      value: valueWei,
+    });
+    assert.equal(await orderBook.getAskValue(1, { from: person1 }), amount);
+  });
+
+  it('Place Second Ask - 5 ETH', async () => {
+    let value = 5;
+    let valueWei = value * 1000000000000000000;
+    let amount = valueWei * 0.95;
+
+    await orderBook.placeAsk(5, {
+      from: person2,
+      value: valueWei,
+    });
+    assert.equal(await orderBook.getAskValue(2, { from: person1 }), amount);
+  });
+
+  it('Place Third Ask - 4 ETH', async () => {
+    let value = 4;
+    let valueWei = value * 1000000000000000000;
+    let amount = valueWei * 0.95;
+
+    await orderBook.placeAsk(4, {
+      from: person2,
+      value: valueWei,
+    });
+    assert.equal(await orderBook.getAskValue(3, { from: person1 }), amount);
+  });
+
+  it('Check Ask Order', async () => {
+    let askOrder = await orderBook.fetchAsk({
+      from: person1,
+    });
+
+    let correctOrder = ' 1 3 2';
+    assert.equal(askOrder, correctOrder);
   });
 });
