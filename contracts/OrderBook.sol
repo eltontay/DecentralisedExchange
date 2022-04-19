@@ -53,11 +53,10 @@ contract OrderBook {
     uint256 public askHead;
     uint256 public askCount;
  
-    event orderCreated(address,uint256,uint256,State,uint256,uint256,uint256);   
-    event newHead(uint256);
-    event newTail(uint256);
-    event bidLink(uint256, uint256);
-    event askLink(uint256, uint256);
+    event bidPlaced(address, uint256);
+    event askPlaced(address, uint256);
+    event bidCancelled(address, uint256);
+    event askCancelled(address, uint256);
 
     constructor (uint256 _commission) {
         commission = _commission;
@@ -96,7 +95,6 @@ contract OrderBook {
             0
         );
         bidBook[bidCount] = newBid;
-        emit orderCreated(customer,value,timestamp,State.pending,bidCount,0,0);   
         return newBid;
     }
 
@@ -112,7 +110,6 @@ contract OrderBook {
             0
         );
         askBook[askCount] = newAsk;
-        emit orderCreated(customer,value,timestamp,State.pending,askCount,0,0);   
         return newAsk;
     }
 
@@ -230,6 +227,7 @@ contract OrderBook {
         order memory newBid = createBid(msg.sender,commissionedPrice,time);
         sortBid(newBid);
         _owner.transfer(commissionedPrice);
+        emit bidPlaced(msg.sender, price);
     }
 
     function cancelBid (uint256 bidId) public payable isPending(bidBook[bidId]) isAuthorised(bidBook[bidId], msg.sender) {
@@ -237,6 +235,7 @@ contract OrderBook {
         deleteAsk(bidId);
         address payable receiver = payable(msg.sender);
         receiver.call{value : value};
+        emit bidCancelled(msg.sender, bidId);
     }
 
     function placeAsk (uint256 price) public payable {
@@ -247,6 +246,7 @@ contract OrderBook {
         order memory newAsk = createAsk(msg.sender,commissionedPrice,time);
         sortAsk(newAsk);
         _owner.transfer(commissionedPrice);
+        emit askPlaced(msg.sender, price);
     }
 
     function cancelAsk (uint256 askId) public payable isPending(askBook[askId]) isAuthorised(askBook[askId], msg.sender) {
@@ -254,6 +254,7 @@ contract OrderBook {
         deleteAsk(askId);
         address payable receiver = payable(msg.sender);
         receiver.call{value:value};
+        emit askCancelled(msg.sender, askId);
     }
 
 /*
