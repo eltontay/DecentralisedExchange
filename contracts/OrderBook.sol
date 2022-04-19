@@ -48,10 +48,10 @@ contract OrderBook {
 
     mapping (uint256 => order) bidBook;
     uint256 public bidHead;
-    uint256 public bidCount; // include all bid orders including soft delete
+    uint256 public bidCount;
     mapping (uint256 => order) askBook;
     uint256 public askHead;
-    uint256 public askCount; // include all ask orders including soft delete
+    uint256 public askCount;
  
     event orderCreated(address,uint256,uint256,State,uint256,uint256,uint256);   
     event newHead(uint256);
@@ -71,7 +71,7 @@ contract OrderBook {
 */
 
     modifier isPending(order memory _order) {
-        require(_order.state == State.pending, "Order Pending");
+        require(_order.state == State.pending, "Order Not Pending");
         _;
     }
 
